@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soarrr Web - Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    'sans': ['Inter', 'system-ui', 'sans-serif'],
+                },
+                colors: {
+                    transparent: 'transparent',
+                    current: 'currentColor',
+                    white: '#ffffff',
+                    black: '#000000',
+                    persian_indigo: {
+                        DEFAULT: '#27187e',
+                        100: '#080519',
+                        200: '#0f0932',
+                        300: '#170e4b',
+                        400: '#1f1363',
+                        500: '#27187e',
+                        600: '#3a23b9',
+                        700: '#5f49dc',
+                        800: '#9485e8',
+                        900: '#cac2f3'
+                    },
+                    cornflower_blue: {
+                        DEFAULT: '#758bfd',
+                        100: '#010d49',
+                        200: '#021a93',
+                        300: '#0327dc',
+                        400: '#2e50fc',
+                        500: '#758bfd',
+                        600: '#92a4fd',
+                        700: '#aebbfe',
+                        800: '#c9d2fe',
+                        900: '#e4e8ff'
+                    },
+                    periwinkle: {
+                        DEFAULT: '#aeb8fe',
+                        100: '#010b55',
+                        200: '#0215aa',
+                        300: '#0521fc',
+                        400: '#596dfd',
+                        500: '#aeb8fe',
+                        600: '#bec6fe',
+                        700: '#cfd4ff',
+                        800: '#dfe2ff',
+                        900: '#eff1ff'
+                    },
+                    anti_flash_white: {
+                        DEFAULT: '#f1f2f6',
+                        100: '#262a3b',
+                        200: '#4c5476',
+                        300: '#7983a9',
+                        400: '#b4bacf',
+                        500: '#f1f2f6',
+                        600: '#f3f3f7',
+                        700: '#f6f6f9',
+                        800: '#f9f9fb',
+                        900: '#fcfcfd'
+                    },
+                    ut_orange: {
+                        DEFAULT: '#ff8600',
+                        100: '#331b00',
+                        200: '#663600',
+                        300: '#995200',
+                        400: '#cc6d00',
+                        500: '#ff8600',
+                        600: '#ffa033',
+                        700: '#ffb866',
+                        800: '#ffcf99',
+                        900: '#ffe7cc'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-persian_indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-anti_flash_white-500 mb-4">Soarrr Web</h1>
+            <p class="text-lg text-periwinkle-700">Design System Playground</p>
+        </header>
+
+        <main class="space-y-8">
+            <!-- Typography Section -->
+            <section class="bg-persian_indigo-200 border border-persian_indigo-300 rounded-lg p-6">
+                <h2 class="text-2xl font-semibold text-anti_flash_white-500 mb-4">Typography</h2>
+                <div class="space-y-2">
+                    <h1 class="text-4xl font-bold text-anti_flash_white-500">Heading 1</h1>
+                    <h2 class="text-3xl font-semibold text-anti_flash_white-600">Heading 2</h2>
+                    <h3 class="text-2xl font-medium text-periwinkle-800">Heading 3</h3>
+                    <p class="text-base text-periwinkle-700">Regular paragraph text with normal weight.</p>
+                    <p class="text-sm text-anti_flash_white-300">Small text for captions or secondary information.</p>
+                </div>
+            </section>
+
+            <!-- Colors Section -->
+            <section class="bg-persian_indigo-200 border border-persian_indigo-300 rounded-lg p-6">
+                <h2 class="text-2xl font-semibold text-anti_flash_white-500 mb-4">Color Palette</h2>
+                <div class="space-y-6">
+                    <!-- Persian Indigo -->
+                    <div>
+                        <h3 class="text-lg font-medium text-anti_flash_white-600 mb-3">Persian Indigo</h3>
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="bg-persian_indigo-100 h-16 rounded flex items-end p-2"><span class="text-xs text-anti_flash_white-600">100</span></div>
+                            <div class="bg-persian_indigo-300 h-16 rounded flex items-end p-2"><span class="text-xs text-white">300</span></div>
+                            <div class="bg-persian_indigo-500 h-16 rounded flex items-end p-2"><span class="text-xs text-white">500</span></div>
+                            <div class="bg-persian_indigo-700 h-16 rounded flex items-end p-2"><span class="text-xs text-white">700</span></div>
+                            <div class="bg-persian_indigo-900 h-16 rounded flex items-end p-2"><span class="text-xs text-white">900</span></div>
+                        </div>
+                    </div>
+                    <!-- Cornflower Blue -->
+                    <div>
+                        <h3 class="text-lg font-medium text-anti_flash_white-600 mb-3">Cornflower Blue</h3>
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="bg-cornflower_blue-100 h-16 rounded flex items-end p-2"><span class="text-xs text-white">100</span></div>
+                            <div class="bg-cornflower_blue-300 h-16 rounded flex items-end p-2"><span class="text-xs text-white">300</span></div>
+                            <div class="bg-cornflower_blue-500 h-16 rounded flex items-end p-2"><span class="text-xs text-white">500</span></div>
+                            <div class="bg-cornflower_blue-700 h-16 rounded flex items-end p-2"><span class="text-xs text-white">700</span></div>
+                            <div class="bg-cornflower_blue-900 h-16 rounded flex items-end p-2"><span class="text-xs text-cornflower_blue-200">900</span></div>
+                        </div>
+                    </div>
+                    <!-- Periwinkle -->
+                    <div>
+                        <h3 class="text-lg font-medium text-anti_flash_white-600 mb-3">Periwinkle</h3>
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="bg-periwinkle-100 h-16 rounded flex items-end p-2"><span class="text-xs text-white">100</span></div>
+                            <div class="bg-periwinkle-300 h-16 rounded flex items-end p-2"><span class="text-xs text-white">300</span></div>
+                            <div class="bg-periwinkle-500 h-16 rounded flex items-end p-2"><span class="text-xs text-white">500</span></div>
+                            <div class="bg-periwinkle-700 h-16 rounded flex items-end p-2"><span class="text-xs text-white">700</span></div>
+                            <div class="bg-periwinkle-900 h-16 rounded flex items-end p-2"><span class="text-xs text-periwinkle-300">900</span></div>
+                        </div>
+                    </div>
+                    <!-- UT Orange -->
+                    <div>
+                        <h3 class="text-lg font-medium text-anti_flash_white-600 mb-3">UT Orange</h3>
+                        <div class="grid grid-cols-5 gap-2">
+                            <div class="bg-ut_orange-100 h-16 rounded flex items-end p-2"><span class="text-xs text-white">100</span></div>
+                            <div class="bg-ut_orange-300 h-16 rounded flex items-end p-2"><span class="text-xs text-white">300</span></div>
+                            <div class="bg-ut_orange-500 h-16 rounded flex items-end p-2"><span class="text-xs text-white">500</span></div>
+                            <div class="bg-ut_orange-700 h-16 rounded flex items-end p-2"><span class="text-xs text-white">700</span></div>
+                            <div class="bg-ut_orange-900 h-16 rounded flex items-end p-2"><span class="text-xs text-ut_orange-300">900</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Buttons Section -->
+            <section class="bg-persian_indigo-200 border border-persian_indigo-300 rounded-lg p-6">
+                <h2 class="text-2xl font-semibold text-anti_flash_white-500 mb-4">Buttons</h2>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-cornflower_blue-500 hover:bg-cornflower_blue-600 text-white px-6 py-2 rounded-md font-medium transition-colors">Primary</button>
+                    <button class="bg-persian_indigo-400 hover:bg-persian_indigo-500 text-white px-6 py-2 rounded-md font-medium transition-colors">Secondary</button>
+                    <button class="border-2 border-cornflower_blue-500 text-cornflower_blue-300 hover:bg-cornflower_blue-500 hover:text-white px-6 py-2 rounded-md font-medium transition-colors">Outline</button>
+                    <button class="text-periwinkle-600 hover:text-periwinkle-700 px-6 py-2 rounded-md font-medium transition-colors">Text</button>
+                    <button class="bg-periwinkle-500 hover:bg-periwinkle-600 text-white px-6 py-2 rounded-md font-medium transition-colors">Info</button>
+                    <button class="bg-ut_orange-500 hover:bg-ut_orange-600 text-white px-6 py-2 rounded-md font-medium transition-colors">Action</button>
+                </div>
+            </section>
+
+            <!-- Cards Section -->
+            <section class="bg-persian_indigo-200 border border-persian_indigo-300 rounded-lg p-6">
+                <h2 class="text-2xl font-semibold text-anti_flash_white-500 mb-4">Cards</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-persian_indigo-300 border border-persian_indigo-400 rounded-lg p-4 hover:bg-persian_indigo-250 transition-colors">
+                        <h3 class="text-lg font-medium text-anti_flash_white-500 mb-2">Standard Card</h3>
+                        <p class="text-periwinkle-700 mb-4">This card demonstrates our custom color palette with proper contrast and readability.</p>
+                        <button class="text-cornflower_blue-400 hover:text-cornflower_blue-300 font-medium">Learn More</button>
+                    </div>
+                    <div class="bg-gradient-to-br from-cornflower_blue-500 to-persian_indigo-600 text-white rounded-lg p-4">
+                        <h3 class="text-lg font-medium mb-2">Gradient Card</h3>
+                        <p class="text-cornflower_blue-100 mb-4">A beautiful gradient using our custom blue tones.</p>
+                        <button class="bg-white/20 backdrop-blur text-white hover:bg-white/30 px-4 py-2 rounded font-medium transition-colors">Action</button>
+                    </div>
+                    <div class="bg-persian_indigo-100 border border-persian_indigo-200 text-anti_flash_white-600 rounded-lg p-4">
+                        <h3 class="text-lg font-medium mb-2">Dark Accent Card</h3>
+                        <p class="text-anti_flash_white-300 mb-4">Ultra-dark themed card using the deepest tones from our palette.</p>
+                        <button class="border border-ut_orange-400 text-ut_orange-400 hover:bg-ut_orange-400 hover:text-white px-4 py-2 rounded font-medium transition-colors">View</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
