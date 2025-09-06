@@ -4,10 +4,15 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import os
+from python_dotenv import load_dotenv
+import secrets
+import re
+from html import escape
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'soarrr-web-secret-key-change-in-production'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///flights.db'
+load_dotenv()
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///flights.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Ensure instance directory exists
@@ -17,6 +22,30 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login_page'
+
+# Input validation helpers
+def validate_email(email):
+    """Validate email format"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+def validate_airport_code(code):
+    """Validate airport code (3 uppercase letters)"""
+    if not code:
+        return True  # Optional field
+    return re.match(r'^[A-Z]{3}$', code.upper()) is not None
+
+def sanitize_input(text):
+    """Sanitize text input to prevent XSS"""
+    if text is None:
+        return None
+    return escape(str(text))[:500]  # Limit length and escape HTML
+
+def validate_password(password):
+    """Basic password validation"""
+    if not password or len(password) < 6:
+        return False, "Password must be at least 6 characters"
+    return True, ""
 
 # User Model
 class User(UserMixin, db.Model):
@@ -137,6 +166,11 @@ def add_flight_page():
 def stats_page():
     return send_from_directory('static', 'stats.html')
 
+@app.route('/map')
+@login_required
+def map_page():
+    return send_from_directory('static', 'map.html')
+
 # Static files
 @app.route('/static/<path:filename>')
 def static_files(filename):
@@ -150,10 +184,21 @@ def signup():
     if not data or not data.get('email') or not data.get('password'):
         return jsonify({'error': 'Email and password required'}), 400
     
-    if User.query.filter_by(email=data['email']).first():
+    email = data.get('email', '').strip().lower()
+    
+    # Validate email format
+    if not validate_email(email):
+        return jsonify({'error': 'Invalid email format'}), 400
+    
+    # Validate password strength
+    valid, msg = validate_password(data.get('password'))
+    if not valid:
+        return jsonify({'error': msg}), 400
+    
+    if User.query.filter_by(email=email).first():
         return jsonify({'error': 'Email already registered'}), 400
     
-    user = User(email=data['email'])
+    user = User(email=email)
     user.set_password(data['password'])
     db.session.add(user)
     db.session.commit()
@@ -168,7 +213,13 @@ def login():
     if not data or not data.get('email') or not data.get('password'):
         return jsonify({'error': 'Email and password required'}), 400
     
-    user = User.query.filter_by(email=data['email']).first()
+    email = data.get('email', '').strip().lower()
+    
+    # Validate email format
+    if not validate_email(email):
+        return jsonify({'error': 'Invalid email format'}), 400
+    
+    user = User.query.filter_by(email=email).first()
     
     if user and user.check_password(data['password']):
         login_user(user)
@@ -207,16 +258,31 @@ def create_flight():
         return jsonify({'error': 'No data provided'}), 400
     
     try:
+        # Validate and sanitize airport codes
+        departure_code = data.get('departure_code', '').upper().strip()
+        arrival_code = data.get('arrival_code', '').upper().strip()
+        
+        if departure_code and not validate_airport_code(departure_code):
+            return jsonify({'error': 'Invalid departure airport code format'}), 400
+        if arrival_code and not validate_airport_code(arrival_code):
+            return jsonify({'error': 'Invalid arrival airport code format'}), 400
+        
+        # Validate cabin class
+        valid_classes = ['Economy', 'Premium Economy', 'Business', 'First']
+        cabin_class = data.get('cabin_class')
+        if cabin_class and cabin_class not in valid_classes:
+            return jsonify({'error': 'Invalid cabin class'}), 400
+        
         flight = Flight(
             user_id=current_user.id,
-            flight_number=data.get('flight_number'),
-            aircraft=data.get('aircraft'),
-            cabin_class=data.get('cabin_class'),
-            departure_code=data.get('departure_code'),
-            departure_city=data.get('departure_city'),
-            arrival_code=data.get('arrival_code'),
-            arrival_city=data.get('arrival_city'),
-            notes=data.get('notes')
+            flight_number=sanitize_input(data.get('flight_number')),
+            aircraft=sanitize_input(data.get('aircraft')),
+            cabin_class=cabin_class,
+            departure_code=departure_code if departure_code else None,
+            departure_city=sanitize_input(data.get('departure_city')),
+            arrival_code=arrival_code if arrival_code else None,
+            arrival_city=sanitize_input(data.get('arrival_city')),
+            notes=sanitize_input(data.get('notes'))
         )
         
         # Parse flight date if provided
@@ -414,4 +480,6 @@ def get_stats():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=debug_mode, host='0.0.0.0', port=port)

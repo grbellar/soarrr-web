@@ -82,7 +82,7 @@ function createFlightCard(flight) {
         'Economy': 'bg-cornflower_blue-100 text-cornflower_blue-700',
         'Premium Economy': 'bg-ut_orange-100 text-ut_orange-700',
         'Business': 'bg-persian_indigo-200 text-persian_indigo-700',
-        'First': 'bg-persian_indigo-300 text-persian_indigo-800'
+        'First': 'bg-yellow-100 text-yellow-800'
     };
     
     const cabinClassColor = cabinClassColors[flight.cabin_class] || 'bg-gray-100 text-gray-700';
@@ -333,17 +333,19 @@ function updateMonthlyActivity(activity) {
     if (!container) return;
     
     const maxFlights = Math.max(...activity.map(m => m.flights), 1);
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthsLong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     
-    const chartHTML = activity.slice(0, 7).map((month, index) => {
-        const height = (month.flights / maxFlights) * 160; // Max height 160px
-        const isCurrentMonth = new Date().getMonth() === index;
+    const chartHTML = activity.slice(0, 12).map((monthData, index) => {
+        const height = Math.max((monthData.flights / maxFlights) * 160, 2); // Min height 2px, max 160px
+        const currentMonth = new Date().getMonth();
+        const isCurrentMonth = currentMonth === index;
         const barColor = isCurrentMonth ? 'bg-ut_orange-500' : 'bg-cornflower_blue-400';
         
         return `
             <div class="flex flex-col items-center">
                 <div class="${barColor} w-8 rounded-t mb-2" style="height: ${height}px"></div>
-                <span class="text-xs text-anti_flash_white-300">${months[index]}</span>
+                <span class="text-xs text-anti_flash_white-300">${monthsShort[index]}</span>
             </div>
         `;
     }).join('');

@@ -174,7 +174,7 @@
                         <!-- Flight Class -->
                         <div class="border-t border-anti_flash_white-400 pt-6">
                             <h3 class="text-md font-medium text-persian_indigo-400 mb-4">Flight Class (Optional)</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                                 <!-- Economy -->
                                 <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-cornflower_blue-400 transition-colors">
                                     <input type="radio" name="flight-class" value="economy" class="sr-only">
@@ -214,6 +214,20 @@
                                             </div>
                                         </div>
                                         <div class="text-sm text-anti_flash_white-300 mt-1">Lie-flat seats</div>
+                                    </div>
+                                </label>
+                                
+                                <!-- First -->
+                                <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-yellow-600 transition-colors">
+                                    <input type="radio" name="flight-class" value="first" class="sr-only">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium text-persian_indigo-400">First</span>
+                                            <div class="w-5 h-5 border-2 border-yellow-600 rounded-full flex items-center justify-center">
+                                                <div class="w-2 h-2 bg-yellow-600 rounded-full opacity-0"></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-anti_flash_white-300 mt-1">Private suites</div>
                                     </div>
                                 </label>
                             </div>
@@ -261,14 +275,14 @@
                         <span class="text-xs text-anti_flash_white-200">Flights</span>
                     </a>
                     <!-- Map -->
-                    <div class="flex flex-col items-center py-2">
+                    <a href="/map.html" class="flex flex-col items-center py-2">
                         <svg class="w-6 h-6 text-anti_flash_white-200 mb-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
                         </svg>
                         <span class="text-xs text-anti_flash_white-200">Map</span>
-                    </div>
+                    </a>
                     <!-- Stats -->
-                    <a href="/stats" class="flex flex-col items-center py-2">
+                    <a href="/stats.html" class="flex flex-col items-center py-2">
                         <svg class="w-6 h-6 text-anti_flash_white-200 mb-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/>
                         </svg>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soarrr Web - Statistics</title>
+    <title>Soarrr Web - Flight Map</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -89,84 +89,76 @@
         <main class="space-y-6 pb-20">
             <!-- Header -->
             <div class="flex items-center justify-between">
-                <h1 class="text-3xl font-bold text-anti_flash_white-500">Statistics</h1>
+                <h1 class="text-3xl font-bold text-anti_flash_white-500">Flight Map</h1>
                 <button onclick="logout()" class="text-sm text-periwinkle-700 hover:text-periwinkle-600">Logout</button>
             </div>
 
-            <!-- Overview Cards -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Total Flights -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <div id="total-flights" class="text-2xl font-bold text-persian_indigo-400">0</div>
-                        <svg class="w-6 h-6 text-cornflower_blue-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+            <!-- Map Content -->
+            <div class="bg-anti_flash_white-500 rounded-xl p-6">
+                <div class="relative h-[500px] bg-gradient-to-b from-cornflower_blue-300/20 to-periwinkle-500/20 rounded-xl overflow-hidden">
+                <!-- Map preview with placeholder elements -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="text-center">
+                        <svg class="w-24 h-24 mx-auto mb-6 text-persian_indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
+                        <h2 class="text-3xl font-bold mb-3 text-persian_indigo-400">Route Map Coming Soon</h2>
+                        <p class="text-anti_flash_white-300 mb-6 max-w-md mx-auto">
+                            Visualize all your flight routes on an interactive world map. Track your journeys, see patterns, and explore your travel history.
+                        </p>
+                        <div class="inline-flex items-center gap-2 bg-ut_orange-500/20 text-ut_orange-300 px-4 py-2 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium">In Development</span>
+                        </div>
                     </div>
-                    <div class="text-sm text-anti_flash_white-300">Total Flights</div>
-                    <!-- Percentage changes removed - calculated dynamically -->
                 </div>
 
-                <!-- Flight Hours -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <div id="total-hours" class="text-2xl font-bold text-persian_indigo-400">0h</div>
-                        <svg class="w-6 h-6 text-ut_orange-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/>
-                        </svg>
-                    </div>
-                    <div class="text-sm text-anti_flash_white-300">Flight Hours</div>
-                    <!-- Percentage changes removed - calculated dynamically -->
-                </div>
+                <!-- Decorative flight path lines -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
+                    <path d="M 100 300 Q 300 100 500 250 T 700 200" stroke="url(#gradient1)" stroke-width="2" fill="none" opacity="0.3" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="0" to="10" dur="3s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M 50 400 Q 250 200 450 350 T 650 300" stroke="url(#gradient2)" stroke-width="2" fill="none" opacity="0.3" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="0" to="10" dur="4s" repeatCount="indefinite"/>
+                    </path>
+                    <defs>
+                        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#758bfd;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ff8600;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#aeb8fe;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#758bfd;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
 
-                <!-- Countries Visited -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <div id="countries-visited" class="text-2xl font-bold text-persian_indigo-400">0</div>
-                        <svg class="w-6 h-6 text-periwinkle-500" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                    </div>
-                    <div class="text-sm text-anti_flash_white-300">Countries</div>
-                    <!-- Percentage changes removed - calculated dynamically -->
+                <!-- Airport markers -->
+                <div class="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2">
+                    <div class="w-3 h-3 bg-ut_orange-500 rounded-full animate-pulse"></div>
                 </div>
-
-                <!-- Miles Flown -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-4">
-                    <div class="flex items-center justify-between mb-2">
-                        <div id="miles-flown" class="text-2xl font-bold text-persian_indigo-400">0</div>
-                        <svg class="w-6 h-6 text-cornflower_blue-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                    </div>
-                    <div class="text-sm text-anti_flash_white-300">Miles Flown</div>
-                    <!-- Percentage changes removed - calculated dynamically -->
+                <div class="absolute top-1/3 right-1/3 transform -translate-x-1/2 -translate-y-1/2">
+                    <div class="w-3 h-3 bg-cornflower_blue-400 rounded-full animate-pulse"></div>
+                </div>
+                <div class="absolute bottom-1/3 left-2/3 transform -translate-x-1/2 -translate-y-1/2">
+                    <div class="w-3 h-3 bg-periwinkle-400 rounded-full animate-pulse"></div>
                 </div>
             </div>
 
-            <!-- Charts Section -->
-            <div class="space-y-4">
-                <!-- Monthly Flight Activity -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Monthly Flight Activity</h2>
-                    <div id="monthly-chart" class="h-48 flex items-end justify-between gap-2">
-                        <!-- Chart will be loaded dynamically -->
+                <div class="mt-8 grid grid-cols-3 gap-4">
+                    <div class="bg-anti_flash_white-600 rounded-lg p-4 text-center">
+                        <div class="text-xl font-bold text-ut_orange-500 mb-1">Interactive</div>
+                        <div class="text-sm text-anti_flash_white-300">Pan, zoom, and explore</div>
                     </div>
-                </div>
-
-                <!-- Flight Classes Distribution -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Flight Classes</h2>
-                    <div id="flight-classes" class="space-y-4">
-                        <!-- Flight classes will be loaded dynamically -->
+                    <div class="bg-anti_flash_white-600 rounded-lg p-4 text-center">
+                        <div class="text-xl font-bold text-cornflower_blue-500 mb-1">Flight Paths</div>
+                        <div class="text-sm text-anti_flash_white-300">See all your routes</div>
                     </div>
-                </div>
-
-                <!-- Top Destinations -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Top Destinations</h2>
-                    <div id="top-destinations" class="space-y-3">
-                        <!-- Destinations will be loaded dynamically -->
+                    <div class="bg-anti_flash_white-600 rounded-lg p-4 text-center">
+                        <div class="text-xl font-bold text-periwinkle-500 mb-1">Statistics</div>
+                        <div class="text-sm text-anti_flash_white-300">Visual travel insights</div>
                     </div>
                 </div>
             </div>
@@ -182,19 +174,19 @@
                         <span class="text-xs text-anti_flash_white-200">Flights</span>
                     </a>
                     <!-- Map -->
-                    <a href="/map.html" class="flex flex-col items-center py-2">
-                        <svg class="w-6 h-6 text-anti_flash_white-200 mb-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
-                        </svg>
-                        <span class="text-xs text-anti_flash_white-200">Map</span>
-                    </a>
-                    <!-- Stats -->
                     <div class="flex flex-col items-center py-2">
                         <svg class="w-6 h-6 text-cornflower_blue-500 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/>
+                        </svg>
+                        <span class="text-xs font-medium text-cornflower_blue-500">Map</span>
+                    </div>
+                    <!-- Stats -->
+                    <a href="/stats.html" class="flex flex-col items-center py-2">
+                        <svg class="w-6 h-6 text-anti_flash_white-200 mb-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/>
                         </svg>
-                        <span class="text-xs font-medium text-cornflower_blue-500">Stats</span>
-                    </div>
+                        <span class="text-xs text-anti_flash_white-200">Stats</span>
+                    </a>
                     <!-- Add Flight -->
                     <a href="/add-flight.html" class="flex flex-col items-center py-2">
                         <div class="w-6 h-6 bg-anti_flash_white-200 rounded-full flex items-center justify-center mb-1">
