@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soarrr Web - Sign Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    'sans': ['Inter', 'system-ui', 'sans-serif'],
+                },
+                colors: {
+                    transparent: 'transparent',
+                    current: 'currentColor',
+                    white: '#ffffff',
+                    black: '#000000',
+                    persian_indigo: {
+                        DEFAULT: '#27187e',
+                        100: '#080519',
+                        200: '#0f0932',
+                        300: '#170e4b',
+                        400: '#1f1363',
+                        500: '#27187e',
+                        600: '#3a23b9',
+                        700: '#5f49dc',
+                        800: '#9485e8',
+                        900: '#cac2f3'
+                    },
+                    cornflower_blue: {
+                        DEFAULT: '#758bfd',
+                        100: '#010d49',
+                        200: '#021a93',
+                        300: '#0327dc',
+                        400: '#2e50fc',
+                        500: '#758bfd',
+                        600: '#92a4fd',
+                        700: '#aebbfe',
+                        800: '#c9d2fe',
+                        900: '#e4e8ff'
+                    },
+                    periwinkle: {
+                        DEFAULT: '#aeb8fe',
+                        100: '#010b55',
+                        200: '#0215aa',
+                        300: '#0521fc',
+                        400: '#596dfd',
+                        500: '#aeb8fe',
+                        600: '#bec6fe',
+                        700: '#cfd4ff',
+                        800: '#dfe2ff',
+                        900: '#eff1ff'
+                    },
+                    anti_flash_white: {
+                        DEFAULT: '#f1f2f6',
+                        100: '#262a3b',
+                        200: '#4c5476',
+                        300: '#7983a9',
+                        400: '#b4bacf',
+                        500: '#f1f2f6',
+                        600: '#f3f3f7',
+                        700: '#f6f6f9',
+                        800: '#f9f9fb',
+                        900: '#fcfcfd'
+                    },
+                    ut_orange: {
+                        DEFAULT: '#ff8600',
+                        100: '#331b00',
+                        200: '#663600',
+                        300: '#995200',
+                        400: '#cc6d00',
+                        500: '#ff8600',
+                        600: '#ffa033',
+                        700: '#ffb866',
+                        800: '#ffcf99',
+                        900: '#ffe7cc'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-persian_indigo-100 min-h-screen flex items-center justify-center">
+    <div class="bg-anti_flash_white-500 rounded-xl p-8 w-full max-w-md shadow-lg">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-persian_indigo-500 mb-2">Soarrr Web</h1>
+            <p class="text-periwinkle-700">Create your account to start tracking flights.</p>
+        </div>
+
+        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            <span class="error-text"></span>
+        </div>
+
+        <form id="signup-form" class="space-y-6">
+            <div>
+                <label for="email" class="block text-sm font-medium text-persian_indigo-400 mb-2">Email</label>
+                <input type="email" id="email" name="email" required
+                       class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent"
+                       placeholder="your@email.com">
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-persian_indigo-400 mb-2">Password</label>
+                <input type="password" id="password" name="password" required minlength="6"
+                       class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent"
+                       placeholder="Create a password (min 6 characters)">
+            </div>
+
+            <div>
+                <label for="confirm-password" class="block text-sm font-medium text-persian_indigo-400 mb-2">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" required
+                       class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent"
+                       placeholder="Confirm your password">
+            </div>
+
+            <button type="submit" id="signup-btn"
+                    class="w-full py-3 px-4 bg-cornflower_blue-500 hover:bg-cornflower_blue-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                Create Account
+            </button>
+        </form>
+
+        <div class="text-center mt-6">
+            <p class="text-anti_flash_white-300">
+                Already have an account? 
+                <a href="/login" class="text-cornflower_blue-500 hover:text-cornflower_blue-600 font-medium">Sign in</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+</body>
+</html>

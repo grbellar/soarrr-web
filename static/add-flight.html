@@ -90,18 +90,18 @@
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <a href="index.html" class="text-periwinkle-700 hover:text-periwinkle-600">
+                    <a href="/" class="text-periwinkle-700 hover:text-periwinkle-600">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                         </svg>
                     </a>
                     <h1 class="text-3xl font-bold text-anti_flash_white-500">Add Flight</h1>
                 </div>
-                <div class="text-sm text-periwinkle-700">7:34</div>
+                <button onclick="logout()" class="text-sm text-periwinkle-700 hover:text-periwinkle-600">Logout</button>
             </div>
 
             <!-- Form -->
-            <form class="space-y-6">
+            <form id="add-flight-form" class="space-y-6">
                 <!-- Flight Route Section -->
                 <div class="bg-anti_flash_white-500 rounded-xl p-6">
                     <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Flight Route</h2>
@@ -110,9 +110,9 @@
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">From</label>
                             <div class="space-y-2">
-                                <input type="text" placeholder="Airport code (e.g., JFK)" 
+                                <input type="text" name="departure_code" placeholder="Airport code (e.g., JFK)" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                                <input type="text" placeholder="City, Country" 
+                                <input type="text" name="departure_city" placeholder="City, Country" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                             </div>
                         </div>
@@ -121,9 +121,9 @@
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">To</label>
                             <div class="space-y-2">
-                                <input type="text" placeholder="Airport code (e.g., LHR)" 
+                                <input type="text" name="arrival_code" placeholder="Airport code (e.g., LHR)" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                                <input type="text" placeholder="City, Country" 
+                                <input type="text" name="arrival_city" placeholder="City, Country" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                             </div>
                         </div>
@@ -137,28 +137,28 @@
                         <!-- Flight Number -->
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Flight Number</label>
-                            <input type="text" placeholder="e.g., BA178" 
+                            <input type="text" name="flight_number" placeholder="e.g., BA178" 
                                    class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                         </div>
                         
                         <!-- Aircraft Type -->
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Aircraft Type</label>
-                            <input type="text" placeholder="e.g., Boeing 777-300ER" 
+                            <input type="text" name="aircraft" placeholder="e.g., Boeing 777-300ER" 
                                    class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                         </div>
                         
                         <!-- Flight Date -->
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Flight Date</label>
-                            <input type="date" 
+                            <input type="date" name="flight_date" 
                                    class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                         </div>
                         
                         <!-- Flight Duration -->
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Duration</label>
-                            <input type="text" placeholder="e.g., 7h 30m" 
+                            <input type="text" name="duration" placeholder="e.g., 7h 30m" 
                                    class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                         </div>
                     </div>
@@ -219,14 +219,14 @@
                         <!-- Departure Time -->
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Departure Time</label>
-                            <input type="time" 
+                            <input type="time" name="departure_time" 
                                    class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                         </div>
                         
                         <!-- Arrival Time -->
                         <div>
                             <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Arrival Time</label>
-                            <input type="time" 
+                            <input type="time" name="arrival_time" 
                                    class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                         </div>
                     </div>
@@ -235,13 +235,13 @@
                 <!-- Notes Section -->
                 <div class="bg-anti_flash_white-500 rounded-xl p-6">
                     <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Notes (Optional)</h2>
-                    <textarea rows="4" placeholder="Add any notes about this flight..." 
+                    <textarea rows="4" name="notes" placeholder="Add any notes about this flight..." 
                               class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent resize-none"></textarea>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="flex gap-3 pt-4">
-                    <button type="button" onclick="window.location.href='index.html'" 
+                    <button type="button" onclick="window.location.href='/'" 
                             class="flex-1 py-3 px-4 border-2 border-anti_flash_white-400 text-persian_indigo-400 rounded-lg font-medium hover:bg-anti_flash_white-600 transition-colors">
                         Cancel
                     </button>
@@ -256,7 +256,7 @@
             <div class="fixed bottom-0 left-0 right-0 bg-anti_flash_white-500 border-t border-anti_flash_white-400 px-4 py-2">
                 <div class="flex justify-around items-center max-w-md mx-auto">
                     <!-- Flights -->
-                    <a href="index.html" class="flex flex-col items-center py-2">
+                    <a href="/" class="flex flex-col items-center py-2">
                         <svg class="w-6 h-6 text-anti_flash_white-200 mb-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
                         </svg>
@@ -270,7 +270,7 @@
                         <span class="text-xs text-anti_flash_white-200">Map</span>
                     </div>
                     <!-- Stats -->
-                    <a href="stats.html" class="flex flex-col items-center py-2">
+                    <a href="/stats" class="flex flex-col items-center py-2">
                         <svg class="w-6 h-6 text-anti_flash_white-200 mb-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/>
                         </svg>
@@ -290,6 +290,7 @@
         </main>
     </div>
 
+    <script src="/static/js/app.js"></script>
     <script>
         // Simple radio button styling
         document.querySelectorAll('input[name="flight-class"]').forEach(radio => {
