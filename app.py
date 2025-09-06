@@ -4,7 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 import os
-from python_dotenv import load_dotenv
+from dotenv import load_dotenv
 import secrets
 import re
 from html import escape
@@ -12,11 +12,26 @@ from html import escape
 app = Flask(__name__)
 load_dotenv()
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///flights.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Ensure instance directory exists
-os.makedirs('instance', exist_ok=True)
+# PostgreSQL configuration
+# Support both DATABASE_URL and standard Heroku/Render postgres:// URLs
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith('postgres://'):
+    # Fix for SQLAlchemy requiring postgresql:// instead of postgres://
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+
+# Default to local PostgreSQL if no DATABASE_URL is set
+if not database_url:
+    # Local PostgreSQL configuration
+    db_user = os.environ.get('DB_USER', 'postgres')
+    db_password = os.environ.get('DB_PASSWORD', 'postgres')
+    db_host = os.environ.get('DB_HOST', 'localhost')
+    db_port = os.environ.get('DB_PORT', '5432')
+    db_name = os.environ.get('DB_NAME', 'soarrr_web')
+    database_url = f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -481,5 +496,5 @@ def get_stats():
 
 if __name__ == '__main__':
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))  # Changed default from 5000 to 5001
     app.run(debug=debug_mode, host='0.0.0.0', port=port)
