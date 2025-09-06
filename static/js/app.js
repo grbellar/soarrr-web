@@ -114,6 +114,7 @@ function createFlightCard(flight) {
                         ${flight.flight_number ? `Flight ${flight.flight_number}` : 'Flight number not set'} • 
                         ${flight.aircraft || 'Aircraft not set'}
                     </div>
+                    ${flight.notes ? `<div class="text-xs text-anti_flash_white-300 italic mt-1">${flight.notes}</div>` : ''}
                 </div>
                 <div class="text-right">
                     <span class="inline-block ${cabinClassColor} px-2 py-1 rounded-md text-xs font-medium mb-2">
