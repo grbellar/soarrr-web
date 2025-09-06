@@ -1,4 +1,4 @@
-# Soarrr Web - Flight Tracking Application
+# Soarrr - Flight Tracking Application
 
 A simple, personal flight tracking web application built with Flask and SQLAlchemy.
 

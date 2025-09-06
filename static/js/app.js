@@ -56,7 +56,12 @@ function displayFlights(flights) {
     if (flights.length === 0) {
         flightsContainer.innerHTML = `
             <div class="bg-anti_flash_white-500 rounded-xl p-8 text-center">
-                <div class="text-6xl mb-4">✈️</div>
+                <div class="mb-4 flex justify-center">
+                    <svg class="w-24 h-24 text-cornflower_blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                        <circle cx="12" cy="12" r="11" stroke-width="1" stroke-dasharray="2,2" opacity="0.3"/>
+                    </svg>
+                </div>
                 <h2 class="text-xl font-semibold text-persian_indigo-400 mb-2">No flights yet!</h2>
                 <p class="text-anti_flash_white-300 mb-4">Start tracking your flights by adding your first one.</p>
                 <a href="/add-flight" class="inline-block bg-cornflower_blue-500 hover:bg-cornflower_blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
