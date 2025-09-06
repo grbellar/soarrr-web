@@ -343,14 +343,14 @@ function updateMonthlyActivity(activity) {
     const monthsLong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     
     const chartHTML = activity.slice(0, 12).map((monthData, index) => {
-        const height = Math.max((monthData.flights / maxFlights) * 160, 2); // Min height 2px, max 160px
+        const height = Math.max((monthData.flights / maxFlights) * 120, 2); // Min height 2px, max 120px (reduced for mobile)
         const currentMonth = new Date().getMonth();
         const isCurrentMonth = currentMonth === index;
         const barColor = isCurrentMonth ? 'bg-ut_orange-500' : 'bg-cornflower_blue-400';
         
         return `
-            <div class="flex flex-col items-center">
-                <div class="${barColor} w-8 rounded-t mb-2" style="height: ${height}px"></div>
+            <div class="flex flex-col items-center flex-1">
+                <div class="${barColor} w-6 sm:w-8 rounded-t mb-2" style="height: ${height}px"></div>
                 <span class="text-xs text-anti_flash_white-300">${monthsShort[index]}</span>
             </div>
         `;
