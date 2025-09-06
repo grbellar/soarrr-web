@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 app = Flask(__name__)
@@ -71,6 +71,42 @@ class Flight(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+# Helper function to calculate flight duration
+def calculate_flight_duration(departure_time, arrival_time):
+    """
+    Calculate flight duration between departure and arrival times.
+    Returns duration as a formatted string like "2h 30m" or None if times are invalid.
+    """
+    if not departure_time or not arrival_time:
+        return None
+    
+    try:
+        # Calculate the difference
+        duration_delta = arrival_time - departure_time
+        
+        # Handle flights that cross midnight (negative duration)
+        if duration_delta.total_seconds() < 0:
+            # Add 24 hours if arrival is next day
+            duration_delta += timedelta(days=1)
+        
+        # Convert to hours and minutes
+        total_minutes = int(duration_delta.total_seconds() / 60)
+        hours = total_minutes // 60
+        minutes = total_minutes % 60
+        
+        # Format the duration string
+        if hours > 0 and minutes > 0:
+            return f"{hours}h {minutes}m"
+        elif hours > 0:
+            return f"{hours}h"
+        elif minutes > 0:
+            return f"{minutes}m"
+        else:
+            return "0m"
+            
+    except Exception as e:
+        return None
 
 # Initialize database
 with app.app_context():
@@ -180,19 +216,55 @@ def create_flight():
             departure_city=data.get('departure_city'),
             arrival_code=data.get('arrival_code'),
             arrival_city=data.get('arrival_city'),
-            duration=data.get('duration'),
             notes=data.get('notes')
         )
         
-        # Parse dates/times if provided
+        # Parse flight date if provided
+        flight_date = None
         if data.get('flight_date'):
-            flight.flight_date = datetime.fromisoformat(data['flight_date']).date()
+            flight_date = datetime.fromisoformat(data['flight_date']).date()
+            flight.flight_date = flight_date
+        else:
+            # Default to today if no date provided
+            flight_date = datetime.now().date()
+            flight.flight_date = flight_date
+        
+        # Parse times and calculate duration
+        departure_time = None
+        arrival_time = None
         
         if data.get('departure_time'):
-            flight.departure_time = datetime.fromisoformat(data['departure_time'])
+            # Handle both ISO datetime format and HH:MM time format
+            time_str = data['departure_time']
+            if 'T' in time_str:
+                # ISO datetime format (e.g., '1999-02-02T11:03:00')
+                departure_time = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+            else:
+                # HH:MM time format
+                departure_time = datetime.combine(
+                    flight_date,
+                    datetime.strptime(time_str, '%H:%M').time()
+                )
+            flight.departure_time = departure_time
         
         if data.get('arrival_time'):
-            flight.arrival_time = datetime.fromisoformat(data['arrival_time'])
+            # Handle both ISO datetime format and HH:MM time format
+            time_str = data['arrival_time']
+            if 'T' in time_str:
+                # ISO datetime format (e.g., '1999-02-02T11:03:00')
+                arrival_time = datetime.fromisoformat(time_str.replace('Z', '+00:00'))
+            else:
+                # HH:MM time format  
+                arrival_time = datetime.combine(
+                    flight_date,
+                    datetime.strptime(time_str, '%H:%M').time()
+                )
+            flight.arrival_time = arrival_time
+        
+        # Auto-calculate duration if both times are provided
+        if departure_time and arrival_time:
+            calculated_duration = calculate_flight_duration(departure_time, arrival_time)
+            flight.duration = calculated_duration
         
         db.session.add(flight)
         db.session.commit()

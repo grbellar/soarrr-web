@@ -102,141 +102,139 @@
 
             <!-- Form -->
             <form id="add-flight-form" class="space-y-6">
-                <!-- Flight Route Section -->
+                <!-- Flight Section -->
                 <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Flight Route</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Flight</h2>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Flight Date *</label>
+                        <input type="date" name="flight_date" required
+                               class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Departure -->
                         <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">From</label>
+                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">From *</label>
                             <div class="space-y-2">
                                 <input type="text" name="departure_code" placeholder="Airport code (e.g., JFK)" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                                 <input type="text" name="departure_city" placeholder="City, Country" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
+                                <div>
+                                    <label class="block text-xs font-medium text-persian_indigo-300 mb-1">Departure Time *</label>
+                                    <input type="time" name="departure_time" 
+                                           class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
+                                </div>
                             </div>
                         </div>
                         
                         <!-- Arrival -->
                         <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">To</label>
+                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">To *</label>
                             <div class="space-y-2">
                                 <input type="text" name="arrival_code" placeholder="Airport code (e.g., LHR)" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                                 <input type="text" name="arrival_city" placeholder="City, Country" 
                                        class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Flight Details Section -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Flight Details</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Flight Number -->
-                        <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Flight Number</label>
-                            <input type="text" name="flight_number" placeholder="e.g., BA178" 
-                                   class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                        </div>
-                        
-                        <!-- Aircraft Type -->
-                        <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Aircraft Type</label>
-                            <input type="text" name="aircraft" placeholder="e.g., Boeing 777-300ER" 
-                                   class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                        </div>
-                        
-                        <!-- Flight Date -->
-                        <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Flight Date</label>
-                            <input type="date" name="flight_date" 
-                                   class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                        </div>
-                        
-                        <!-- Flight Duration -->
-                        <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Duration</label>
-                            <input type="text" name="duration" placeholder="e.g., 7h 30m" 
-                                   class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Flight Class Section -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Flight Class</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <!-- Economy -->
-                        <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-cornflower_blue-400 transition-colors">
-                            <input type="radio" name="flight-class" value="economy" class="sr-only">
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-medium text-persian_indigo-400">Economy</span>
-                                    <div class="w-5 h-5 border-2 border-cornflower_blue-400 rounded-full flex items-center justify-center">
-                                        <div class="w-2 h-2 bg-cornflower_blue-500 rounded-full opacity-0"></div>
-                                    </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-persian_indigo-300 mb-1">Arrival Time *</label>
+                                    <input type="time" name="arrival_time" 
+                                           class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                                 </div>
-                                <div class="text-sm text-anti_flash_white-300 mt-1">Standard seating</div>
                             </div>
-                        </label>
-                        
-                        <!-- Premium Economy -->
-                        <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-ut_orange-400 transition-colors">
-                            <input type="radio" name="flight-class" value="premium-economy" class="sr-only">
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-medium text-persian_indigo-400">Premium Economy</span>
-                                    <div class="w-5 h-5 border-2 border-ut_orange-400 rounded-full flex items-center justify-center">
-                                        <div class="w-2 h-2 bg-ut_orange-500 rounded-full opacity-0"></div>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-anti_flash_white-300 mt-1">Extra legroom</div>
-                            </div>
-                        </label>
-                        
-                        <!-- Business -->
-                        <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-persian_indigo-600 transition-colors">
-                            <input type="radio" name="flight-class" value="business" class="sr-only">
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-medium text-persian_indigo-400">Business</span>
-                                    <div class="w-5 h-5 border-2 border-persian_indigo-600 rounded-full flex items-center justify-center">
-                                        <div class="w-2 h-2 bg-persian_indigo-600 rounded-full opacity-0"></div>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-anti_flash_white-300 mt-1">Lie-flat seats</div>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Times Section -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Flight Times</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Departure Time -->
-                        <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Departure Time</label>
-                            <input type="time" name="departure_time" 
-                                   class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
-                        </div>
-                        
-                        <!-- Arrival Time -->
-                        <div>
-                            <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Arrival Time</label>
-                            <input type="time" name="arrival_time" 
-                                   class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
                         </div>
                     </div>
                 </div>
 
-                <!-- Notes Section -->
-                <div class="bg-anti_flash_white-500 rounded-xl p-6">
-                    <h2 class="text-lg font-semibold text-persian_indigo-400 mb-4">Notes (Optional)</h2>
-                    <textarea rows="4" name="notes" placeholder="Add any notes about this flight..." 
-                              class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent resize-none"></textarea>
+                <!-- Flight Details Section (Optional) -->
+                <div class="bg-anti_flash_white-500 rounded-xl">
+                    <button type="button" id="toggle-details" class="w-full p-6 text-left flex items-center justify-between hover:bg-anti_flash_white-600 transition-colors rounded-xl">
+                        <h2 class="text-lg font-semibold text-persian_indigo-400">Flight Details (Optional)</h2>
+                        <svg id="details-chevron" class="w-5 h-5 text-persian_indigo-400 transform transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </button>
+                    <div id="details-content" class="hidden px-6 pb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <!-- Flight Number -->
+                            <div>
+                                <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Flight Number (Optional)</label>
+                                <input type="text" name="flight_number" placeholder="e.g., BA178" 
+                                       class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
+                            </div>
+                            
+                            <!-- Aircraft Type -->
+                            <div>
+                                <label class="block text-sm font-medium text-persian_indigo-400 mb-2">Aircraft Type (Optional)</label>
+                                <input type="text" name="aircraft" placeholder="e.g., Boeing 777-300ER" 
+                                       class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent">
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- Flight Class -->
+                        <div class="border-t border-anti_flash_white-400 pt-6">
+                            <h3 class="text-md font-medium text-persian_indigo-400 mb-4">Flight Class (Optional)</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <!-- Economy -->
+                                <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-cornflower_blue-400 transition-colors">
+                                    <input type="radio" name="flight-class" value="economy" class="sr-only">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium text-persian_indigo-400">Economy</span>
+                                            <div class="w-5 h-5 border-2 border-cornflower_blue-400 rounded-full flex items-center justify-center">
+                                                <div class="w-2 h-2 bg-cornflower_blue-500 rounded-full opacity-0"></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-anti_flash_white-300 mt-1">Standard seating</div>
+                                    </div>
+                                </label>
+                                
+                                <!-- Premium Economy -->
+                                <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-ut_orange-400 transition-colors">
+                                    <input type="radio" name="flight-class" value="premium-economy" class="sr-only">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium text-persian_indigo-400">Premium Economy</span>
+                                            <div class="w-5 h-5 border-2 border-ut_orange-400 rounded-full flex items-center justify-center">
+                                                <div class="w-2 h-2 bg-ut_orange-500 rounded-full opacity-0"></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-anti_flash_white-300 mt-1">Extra legroom</div>
+                                    </div>
+                                </label>
+                                
+                                <!-- Business -->
+                                <label class="flex items-center p-4 border-2 border-anti_flash_white-400 rounded-lg cursor-pointer hover:border-persian_indigo-600 transition-colors">
+                                    <input type="radio" name="flight-class" value="business" class="sr-only">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium text-persian_indigo-400">Business</span>
+                                            <div class="w-5 h-5 border-2 border-persian_indigo-600 rounded-full flex items-center justify-center">
+                                                <div class="w-2 h-2 bg-persian_indigo-600 rounded-full opacity-0"></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-anti_flash_white-300 mt-1">Lie-flat seats</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Notes Section (Optional) -->
+                <div class="bg-anti_flash_white-500 rounded-xl">
+                    <button type="button" id="toggle-notes" class="w-full p-6 text-left flex items-center justify-between hover:bg-anti_flash_white-600 transition-colors rounded-xl">
+                        <h2 class="text-lg font-semibold text-persian_indigo-400">Notes (Optional)</h2>
+                        <svg id="notes-chevron" class="w-5 h-5 text-persian_indigo-400 transform transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                        </svg>
+                    </button>
+                    <div id="notes-content" class="hidden px-6 pb-6">
+                        <textarea rows="4" name="notes" placeholder="Add any notes about this flight..." 
+                                  class="w-full px-4 py-3 bg-anti_flash_white-600 border border-anti_flash_white-400 rounded-lg text-persian_indigo-400 placeholder-anti_flash_white-300 focus:outline-none focus:ring-2 focus:ring-cornflower_blue-500 focus:border-transparent resize-none"></textarea>
+                    </div>
                 </div>
 
                 <!-- Action Buttons -->
@@ -292,6 +290,34 @@
 
     <script src="/static/js/app.js"></script>
     <script>
+        // Toggle collapsible flight details section
+        document.getElementById('toggle-details').addEventListener('click', function() {
+            const content = document.getElementById('details-content');
+            const chevron = document.getElementById('details-chevron');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        });
+
+        // Toggle collapsible notes section
+        document.getElementById('toggle-notes').addEventListener('click', function() {
+            const content = document.getElementById('notes-content');
+            const chevron = document.getElementById('notes-chevron');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        });
+
         // Simple radio button styling
         document.querySelectorAll('input[name="flight-class"]').forEach(radio => {
             radio.addEventListener('change', function() {
