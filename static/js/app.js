@@ -206,16 +206,59 @@ async function handleAddFlight(event) {
         }
     }
     
+    // Client-side validation with user-friendly messages
+    if (!flightData.flight_date) {
+        showMessage('Please select a flight date', 'error');
+        return;
+    }
+    
+    if (!flightData.departure_code) {
+        showMessage('Please enter the departure airport code (e.g., JFK)', 'error');
+        return;
+    }
+    
+    if (!flightData.arrival_code) {
+        showMessage('Please enter the arrival airport code (e.g., LHR)', 'error');
+        return;
+    }
+    
+    if (!flightData.departure_time) {
+        showMessage('Please enter the departure time', 'error');
+        return;
+    }
+    
+    if (!flightData.arrival_time) {
+        showMessage('Please enter the arrival time', 'error');
+        return;
+    }
+    
+    // Validate airport codes format (3 letters)
+    const airportCodeRegex = /^[A-Z]{3}$/i;
+    if (!airportCodeRegex.test(flightData.departure_code)) {
+        showMessage('Departure airport code must be 3 letters (e.g., JFK, LAX)', 'error');
+        return;
+    }
+    
+    if (!airportCodeRegex.test(flightData.arrival_code)) {
+        showMessage('Arrival airport code must be 3 letters (e.g., LHR, CDG)', 'error');
+        return;
+    }
+    
     // Get selected cabin class
     const selectedClass = document.querySelector('input[name="flight-class"]:checked');
     if (selectedClass) {
         const classLabels = {
             'economy': 'Economy',
             'premium-economy': 'Premium Economy',
-            'business': 'Business'
+            'business': 'Business',
+            'first': 'First'
         };
         flightData.cabin_class = classLabels[selectedClass.value];
     }
+    
+    // Convert airport codes to uppercase
+    flightData.departure_code = flightData.departure_code.toUpperCase();
+    flightData.arrival_code = flightData.arrival_code.toUpperCase();
     
     // Combine date and times if provided
     if (flightData.flight_date && flightData.departure_time) {
@@ -239,17 +282,33 @@ async function handleAddFlight(event) {
         });
         
         if (response.ok) {
-            showMessage('Flight added successfully!', 'success');
+            showMessage('Flight added successfully! Redirecting...', 'success');
             setTimeout(() => {
                 window.location.href = '/';
             }, 1500);
         } else {
             const data = await response.json();
-            throw new Error(data.error || 'Failed to add flight');
+            // Make server error messages more user-friendly
+            let errorMessage = data.error || 'Failed to add flight';
+            
+            // Transform technical errors into user-friendly messages
+            if (errorMessage.includes('Invalid departure airport code')) {
+                errorMessage = 'Please enter a valid 3-letter departure airport code (e.g., JFK)';
+            } else if (errorMessage.includes('Invalid arrival airport code')) {
+                errorMessage = 'Please enter a valid 3-letter arrival airport code (e.g., LHR)';
+            } else if (errorMessage.includes('departure_time')) {
+                errorMessage = 'Please enter a valid departure time';
+            } else if (errorMessage.includes('arrival_time')) {
+                errorMessage = 'Please enter a valid arrival time';
+            } else if (errorMessage.includes('cabin_class')) {
+                errorMessage = 'Please select a valid cabin class';
+            }
+            
+            throw new Error(errorMessage);
         }
     } catch (error) {
         console.error('Error adding flight:', error);
-        showMessage(error.message || 'Error adding flight. Please try again.', 'error');
+        showMessage(error.message || 'Unable to add flight. Please check your connection and try again.', 'error');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Add Flight';
@@ -399,33 +458,63 @@ function logout() {
 
 // Utility function to show messages
 function showMessage(message, type = 'info') {
-    // Create or update message element
-    let messageEl = document.getElementById('app-message');
-    if (!messageEl) {
-        messageEl = document.createElement('div');
-        messageEl.id = 'app-message';
-        messageEl.className = 'fixed top-4 right-4 z-50 px-4 py-3 rounded-lg font-medium text-sm max-w-sm';
-        document.body.appendChild(messageEl);
+    // Get the notification container or create one if it doesn't exist
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none';
+        document.body.appendChild(container);
     }
     
-    // Set message content and styling
-    messageEl.textContent = message;
-    messageEl.className = 'fixed top-4 right-4 z-50 px-4 py-3 rounded-lg font-medium text-sm max-w-sm';
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'pointer-events-auto mb-3 px-6 py-4 rounded-xl shadow-lg font-medium text-sm max-w-md mx-auto flex items-center gap-3 transform transition-all duration-300 translate-y-0 opacity-100';
     
+    // Add icon and styling based on type
+    let iconSvg = '';
     if (type === 'success') {
-        messageEl.classList.add('bg-green-100', 'border', 'border-green-400', 'text-green-700');
+        notification.classList.add('bg-cornflower_blue-500', 'text-white');
+        iconSvg = '<svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
     } else if (type === 'error') {
-        messageEl.classList.add('bg-red-100', 'border', 'border-red-400', 'text-red-700');
+        notification.classList.add('bg-ut_orange-500', 'text-white');
+        iconSvg = '<svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>';
     } else {
-        messageEl.classList.add('bg-blue-100', 'border', 'border-blue-400', 'text-blue-700');
+        notification.classList.add('bg-periwinkle-500', 'text-white');
+        iconSvg = '<svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
     }
     
-    // Auto-hide after 3 seconds
+    notification.innerHTML = `
+        ${iconSvg}
+        <span class="flex-1">${message}</span>
+        <button onclick="this.parentElement.remove()" class="ml-2 hover:opacity-75 transition-opacity">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+    `;
+    
+    // Add entrance animation
+    notification.style.transform = 'translateY(-20px)';
+    notification.style.opacity = '0';
+    container.appendChild(notification);
+    
+    // Trigger entrance animation
     setTimeout(() => {
-        if (messageEl) {
-            messageEl.remove();
-        }
-    }, 3000);
+        notification.style.transform = 'translateY(0)';
+        notification.style.opacity = '1';
+    }, 10);
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateY(-20px)';
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            if (notification && notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    }, 5000);
 }
 
 // Add sample data
