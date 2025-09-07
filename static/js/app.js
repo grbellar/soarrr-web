@@ -48,6 +48,214 @@ async function initFlightsList() {
     }
 }
 
+// Flight Import Modal Functions
+let importedFlightData = null;
+
+function openFlightImportModal() {
+    const modal = document.getElementById('flight-import-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        // Set today's date as default
+        const dateInput = document.getElementById('import-flight-date');
+        if (dateInput && !dateInput.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+        // Clear previous data
+        document.getElementById('import-flight-number').value = '';
+        document.getElementById('import-error').classList.add('hidden');
+        document.getElementById('import-preview').classList.add('hidden');
+        document.getElementById('search-flight-btn').classList.remove('hidden');
+        document.getElementById('use-flight-data-btn').classList.add('hidden');
+        importedFlightData = null;
+    }
+}
+
+function closeFlightImportModal() {
+    const modal = document.getElementById('flight-import-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        importedFlightData = null;
+    }
+}
+
+async function searchFlight() {
+    const flightNumber = document.getElementById('import-flight-number').value.trim();
+    const flightDate = document.getElementById('import-flight-date').value;
+    
+    const errorDiv = document.getElementById('import-error');
+    const previewDiv = document.getElementById('import-preview');
+    const searchBtn = document.getElementById('search-flight-btn');
+    const useBtn = document.getElementById('use-flight-data-btn');
+    const searchBtnText = document.getElementById('search-btn-text');
+    const searchSpinner = document.getElementById('search-spinner');
+    
+    // Reset UI
+    errorDiv.classList.add('hidden');
+    previewDiv.classList.add('hidden');
+    
+    // Validation
+    if (!flightNumber) {
+        errorDiv.textContent = 'Please enter a flight number';
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+    
+    if (!flightDate) {
+        errorDiv.textContent = 'Please select a flight date';
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+    
+    // Show loading state
+    searchBtn.disabled = true;
+    searchBtnText.textContent = 'Searching...';
+    searchSpinner.classList.remove('hidden');
+    
+    try {
+        const response = await fetch('/api/flights/lookup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                flight_number: flightNumber,
+                flight_date: flightDate
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            // Store the imported data
+            importedFlightData = result.data;
+            
+            // Display preview
+            const previewContent = document.getElementById('preview-content');
+            let previewHtml = '';
+            
+            if (result.data.airline) {
+                previewHtml += `<div><strong>Airline:</strong> ${result.data.airline}</div>`;
+            }
+            if (result.data.flight_number) {
+                previewHtml += `<div><strong>Flight:</strong> ${result.data.flight_number}</div>`;
+            }
+            if (result.data.aircraft) {
+                previewHtml += `<div><strong>Aircraft:</strong> ${result.data.aircraft}</div>`;
+            }
+            if (result.data.departure_code && result.data.departure_city) {
+                previewHtml += `<div><strong>From:</strong> ${result.data.departure_code} - ${result.data.departure_city}</div>`;
+            }
+            if (result.data.departure_time) {
+                previewHtml += `<div><strong>Departure:</strong> ${result.data.departure_time}</div>`;
+            }
+            if (result.data.arrival_code && result.data.arrival_city) {
+                previewHtml += `<div><strong>To:</strong> ${result.data.arrival_code} - ${result.data.arrival_city}</div>`;
+            }
+            if (result.data.arrival_time) {
+                previewHtml += `<div><strong>Arrival:</strong> ${result.data.arrival_time}</div>`;
+            }
+            if (result.data.flight_status && result.data.flight_status !== 'unknown') {
+                previewHtml += `<div><strong>Status:</strong> ${result.data.flight_status}</div>`;
+            }
+            
+            previewContent.innerHTML = previewHtml;
+            previewDiv.classList.remove('hidden');
+            
+            // Show use data button, hide search button
+            searchBtn.classList.add('hidden');
+            useBtn.classList.remove('hidden');
+            
+        } else {
+            // Show error
+            errorDiv.textContent = result.error || 'Failed to find flight information';
+            errorDiv.classList.remove('hidden');
+        }
+        
+    } catch (error) {
+        console.error('Flight lookup error:', error);
+        errorDiv.textContent = 'Failed to connect to flight data service. Please try again.';
+        errorDiv.classList.remove('hidden');
+    } finally {
+        // Reset button state
+        searchBtn.disabled = false;
+        searchBtnText.textContent = 'Search Flight';
+        searchSpinner.classList.add('hidden');
+    }
+}
+
+function useFlightData() {
+    if (!importedFlightData) {
+        return;
+    }
+    
+    // Fill in the form fields with imported data
+    const form = document.getElementById('add-flight-form');
+    
+    // Set flight date (use the date from the import modal)
+    const importDate = document.getElementById('import-flight-date').value;
+    if (importDate) {
+        const dateInput = form.querySelector('input[name="flight_date"]');
+        if (dateInput) dateInput.value = importDate;
+    }
+    
+    // Set flight number
+    if (importedFlightData.flight_number) {
+        const flightNumberInput = form.querySelector('input[name="flight_number"]');
+        if (flightNumberInput) flightNumberInput.value = importedFlightData.flight_number;
+    }
+    
+    // Set aircraft
+    if (importedFlightData.aircraft) {
+        const aircraftInput = form.querySelector('input[name="aircraft"]');
+        if (aircraftInput) aircraftInput.value = importedFlightData.aircraft;
+    }
+    
+    // Set departure info
+    if (importedFlightData.departure_code) {
+        const depCodeInput = form.querySelector('input[name="departure_code"]');
+        if (depCodeInput) depCodeInput.value = importedFlightData.departure_code;
+    }
+    if (importedFlightData.departure_city) {
+        const depCityInput = form.querySelector('input[name="departure_city"]');
+        if (depCityInput) depCityInput.value = importedFlightData.departure_city;
+    }
+    if (importedFlightData.departure_time) {
+        const depTimeInput = form.querySelector('input[name="departure_time"]');
+        if (depTimeInput) depTimeInput.value = importedFlightData.departure_time;
+    }
+    
+    // Set arrival info
+    if (importedFlightData.arrival_code) {
+        const arrCodeInput = form.querySelector('input[name="arrival_code"]');
+        if (arrCodeInput) arrCodeInput.value = importedFlightData.arrival_code;
+    }
+    if (importedFlightData.arrival_city) {
+        const arrCityInput = form.querySelector('input[name="arrival_city"]');
+        if (arrCityInput) arrCityInput.value = importedFlightData.arrival_city;
+    }
+    if (importedFlightData.arrival_time) {
+        const arrTimeInput = form.querySelector('input[name="arrival_time"]');
+        if (arrTimeInput) arrTimeInput.value = importedFlightData.arrival_time;
+    }
+    
+    // Expand the details section if we have data to show
+    if (importedFlightData.flight_number || importedFlightData.aircraft) {
+        const detailsContent = document.getElementById('details-content');
+        const detailsChevron = document.getElementById('details-chevron');
+        if (detailsContent && detailsContent.classList.contains('hidden')) {
+            detailsContent.classList.remove('hidden');
+            detailsChevron.classList.add('rotate-180');
+        }
+    }
+    
+    // Close the modal
+    closeFlightImportModal();
+    
+    // Show success message
+    showMessage('Flight data imported successfully! Please review and add any additional details.', 'success');
+}
+
 // Display flights in the list
 function displayFlights(flights) {
     const flightsContainer = document.querySelector('#flights-container');

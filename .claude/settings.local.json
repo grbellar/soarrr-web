@@ -3,7 +3,13 @@
     "allow": [
       "Bash(open index.html)",
       "WebSearch",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "mcp__playwright*",
+      "mcp__playwright__browser_type",
+      "mcp__playwright__browser_click",
+      "Read(//private/var/log/**)"
     ],
     "deny": [],
     "ask": []

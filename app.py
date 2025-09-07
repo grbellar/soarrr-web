@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import secrets
 import re
 from html import escape
+import requests
 
 app = Flask(__name__)
 load_dotenv()
@@ -381,6 +382,148 @@ def get_flight(flight_id):
         return jsonify({'error': 'Flight not found'}), 404
     
     return jsonify(flight.to_dict())
+
+# Flight Lookup API
+@app.route('/api/flights/lookup', methods=['POST'])
+@login_required
+def lookup_flight():
+    """
+    Look up flight information using AeroDataBox API via RapidAPI
+    Expects JSON with flight_number and flight_date
+    """
+    data = request.get_json()
+    
+    if not data or not data.get('flight_number') or not data.get('flight_date'):
+        return jsonify({'error': 'Flight number and date are required'}), 400
+    
+    # Get API key from environment
+    api_key = os.environ.get('RAPIDAPI_KEY')
+    if not api_key:
+        return jsonify({'error': 'Flight lookup service not configured. Please contact support.'}), 503
+    
+    flight_number = data.get('flight_number').upper().strip()
+    flight_date = data.get('flight_date')
+    
+    # Validate flight number format (2-3 letter airline code + 1-4 digits)
+    if not re.match(r'^[A-Z]{2,3}\d{1,4}$', flight_number):
+        return jsonify({'error': 'Invalid flight number format. Use airline code + number (e.g., UA328)'}), 400
+    
+    try:
+        # Call AeroDataBox API via RapidAPI
+        # Using the searchByFlightNumber endpoint
+        url = f'https://aerodatabox.p.rapidapi.com/flights/number/{flight_number}/{flight_date}'
+        headers = {
+            'X-RapidAPI-Key': api_key,
+            'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
+        }
+        
+        response = requests.get(url, headers=headers, timeout=10)
+        
+        if response.status_code == 404:
+            return jsonify({'error': f'No flight found for {flight_number} on {flight_date}'}), 404
+        elif response.status_code == 429:
+            return jsonify({'error': 'API rate limit exceeded. Please try again later.'}), 429
+        elif response.status_code != 200:
+            app.logger.error(f'AeroDataBox API returned status {response.status_code}: {response.text}')
+            return jsonify({'error': f'Failed to fetch flight data (Status: {response.status_code})'}), 502
+        
+        api_data = response.json()
+        
+        # AeroDataBox returns an array of flights for the day
+        if not api_data or len(api_data) == 0:
+            return jsonify({'error': f'No flight found for {flight_number} on {flight_date}'}), 404
+        
+        # Get the first flight (usually there's only one per day for a flight number)
+        flight_info = api_data[0] if isinstance(api_data, list) else api_data
+        
+        # Parse and format the flight data for AeroDataBox response format
+        formatted_data = {
+            'flight_number': flight_info.get('number', flight_number),
+            'aircraft': None,
+            'departure_code': None,
+            'departure_city': None,
+            'arrival_code': None,
+            'arrival_city': None,
+            'departure_time': None,
+            'arrival_time': None,
+            'airline': None,
+            'flight_status': flight_info.get('status', 'unknown')
+        }
+        
+        # Extract aircraft information
+        if flight_info.get('aircraft'):
+            aircraft_data = flight_info['aircraft']
+            # AeroDataBox provides model information
+            formatted_data['aircraft'] = aircraft_data.get('model') or 'Unknown Aircraft'
+        
+        # Extract departure information
+        if flight_info.get('departure'):
+            dep = flight_info['departure']
+            formatted_data['departure_code'] = dep.get('iataCode', '').upper()
+            
+            # Get airport name and location
+            airport_name = dep.get('airport', {}).get('name', '')
+            city = dep.get('airport', {}).get('municipalityName', '')
+            country = dep.get('airport', {}).get('countryCode', '')
+            
+            if city and country:
+                formatted_data['departure_city'] = f"{city}, {country}"
+            elif airport_name:
+                formatted_data['departure_city'] = airport_name
+            
+            # Get scheduled departure time
+            departure_time_str = dep.get('scheduledTimeLocal')
+            if departure_time_str:
+                try:
+                    # Parse ISO format datetime and extract time
+                    dt = datetime.fromisoformat(departure_time_str.replace('Z', '+00:00'))
+                    formatted_data['departure_time'] = dt.strftime('%H:%M')
+                except:
+                    pass
+        
+        # Extract arrival information
+        if flight_info.get('arrival'):
+            arr = flight_info['arrival']
+            formatted_data['arrival_code'] = arr.get('iataCode', '').upper()
+            
+            # Get airport name and location
+            airport_name = arr.get('airport', {}).get('name', '')
+            city = arr.get('airport', {}).get('municipalityName', '')
+            country = arr.get('airport', {}).get('countryCode', '')
+            
+            if city and country:
+                formatted_data['arrival_city'] = f"{city}, {country}"
+            elif airport_name:
+                formatted_data['arrival_city'] = airport_name
+            
+            # Get scheduled arrival time
+            arrival_time_str = arr.get('scheduledTimeLocal')
+            if arrival_time_str:
+                try:
+                    # Parse ISO format datetime and extract time
+                    dt = datetime.fromisoformat(arrival_time_str.replace('Z', '+00:00'))
+                    formatted_data['arrival_time'] = dt.strftime('%H:%M')
+                except:
+                    pass
+        
+        # Extract airline information
+        if flight_info.get('airline'):
+            formatted_data['airline'] = flight_info['airline'].get('name', '')
+        
+        return jsonify({
+            'success': True,
+            'data': formatted_data,
+            'message': f'Found flight {flight_number} on {flight_date}'
+        }), 200
+        
+    except requests.exceptions.Timeout:
+        return jsonify({'error': 'Flight lookup service timed out. Please try again.'}), 504
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': 'Failed to connect to flight data service'}), 502
+    except Exception as e:
+        # Log the error for debugging
+        app.logger.error(f'Flight lookup error: {str(e)}')
+        return jsonify({'error': 'An unexpected error occurred'}), 500
 
 # Statistics API
 @app.route('/api/stats', methods=['GET'])

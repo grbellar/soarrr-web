@@ -1,0 +1,2 @@
+Miles flown is not being calculated correctly.
+Should be able to automatically grab the flight data from their flight number. There's usually services where you can just put in a flight number and see its stats. Would make adding a new flight super easy.
