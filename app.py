@@ -92,6 +92,7 @@ class Flight(db.Model):
     flight_date = db.Column(db.Date)
     duration = db.Column(db.String(20))
     notes = db.Column(db.Text)
+    is_seed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -109,6 +110,7 @@ class Flight(db.Model):
             'flight_date': self.flight_date.isoformat() if self.flight_date else None,
             'duration': self.duration,
             'notes': self.notes,
+            'is_seed': self.is_seed,
             'created_at': self.created_at.isoformat()
         }
 
@@ -297,7 +299,8 @@ def create_flight():
             departure_city=sanitize_input(data.get('departure_city')),
             arrival_code=arrival_code if arrival_code else None,
             arrival_city=sanitize_input(data.get('arrival_city')),
-            notes=sanitize_input(data.get('notes'))
+            notes=sanitize_input(data.get('notes')),
+            is_seed=False  # Explicitly set to False for manually created flights
         )
         
         # Parse flight date if provided
@@ -493,6 +496,150 @@ def get_stats():
         'top_destinations': top_destinations,
         'monthly_activity': monthly_activity
     })
+
+# Seed Data API
+@app.route('/api/seed/add', methods=['POST'])
+@login_required
+def add_seed_data():
+    """Add sample flight data for the user to explore the app"""
+    try:
+        # Check if user already has seed data
+        existing_seed = Flight.query.filter_by(user_id=current_user.id, is_seed=True).first()
+        if existing_seed:
+            return jsonify({'error': 'Sample data already exists. Remove it first before adding new sample data.'}), 400
+        
+        # Sample flights data
+        from datetime import date, time
+        sample_flights = [
+            {
+                'flight_number': 'UA328',
+                'aircraft': 'Boeing 737-900',
+                'cabin_class': 'Economy',
+                'departure_code': 'SFO',
+                'departure_city': 'San Francisco, USA',
+                'arrival_code': 'LAX',
+                'arrival_city': 'Los Angeles, USA',
+                'flight_date': date.today() - timedelta(days=30),
+                'departure_time': datetime.combine(date.today() - timedelta(days=30), time(9, 30)),
+                'arrival_time': datetime.combine(date.today() - timedelta(days=30), time(11, 0)),
+                'notes': 'Quick business trip to LA'
+            },
+            {
+                'flight_number': 'DL142',
+                'aircraft': 'Airbus A330-300',
+                'cabin_class': 'Business',
+                'departure_code': 'JFK',
+                'departure_city': 'New York, USA',
+                'arrival_code': 'LHR',
+                'arrival_city': 'London, UK',
+                'flight_date': date.today() - timedelta(days=60),
+                'departure_time': datetime.combine(date.today() - timedelta(days=60), time(22, 0)),
+                'arrival_time': datetime.combine(date.today() - timedelta(days=59), time(10, 30)),
+                'notes': 'Red-eye to London for vacation'
+            },
+            {
+                'flight_number': 'EK215',
+                'aircraft': 'Airbus A380-800',
+                'cabin_class': 'First',
+                'departure_code': 'DXB',
+                'departure_city': 'Dubai, UAE',
+                'arrival_code': 'LAX',
+                'arrival_city': 'Los Angeles, USA',
+                'flight_date': date.today() - timedelta(days=90),
+                'departure_time': datetime.combine(date.today() - timedelta(days=90), time(8, 45)),
+                'arrival_time': datetime.combine(date.today() - timedelta(days=90), time(13, 50)),
+                'notes': 'Long haul flight on the A380!'
+            },
+            {
+                'flight_number': 'AA2402',
+                'aircraft': 'Boeing 787-9',
+                'cabin_class': 'Premium Economy',
+                'departure_code': 'ORD',
+                'departure_city': 'Chicago, USA',
+                'arrival_code': 'MIA',
+                'arrival_city': 'Miami, USA',
+                'flight_date': date.today() - timedelta(days=15),
+                'departure_time': datetime.combine(date.today() - timedelta(days=15), time(14, 15)),
+                'arrival_time': datetime.combine(date.today() - timedelta(days=15), time(18, 45)),
+                'notes': 'Weekend getaway to Miami'
+            },
+            {
+                'flight_number': 'SQ22',
+                'aircraft': 'Airbus A350-900ULR',
+                'cabin_class': 'Business',
+                'departure_code': 'SIN',
+                'departure_city': 'Singapore',
+                'arrival_code': 'EWR',
+                'arrival_city': 'Newark, USA',
+                'flight_date': date.today() - timedelta(days=120),
+                'departure_time': datetime.combine(date.today() - timedelta(days=120), time(23, 30)),
+                'arrival_time': datetime.combine(date.today() - timedelta(days=119), time(5, 30)),
+                'notes': "World's longest flight!"
+            }
+        ]
+        
+        # Create flight records
+        created_flights = []
+        for flight_data in sample_flights:
+            flight = Flight(
+                user_id=current_user.id,
+                flight_number=flight_data['flight_number'],
+                aircraft=flight_data['aircraft'],
+                cabin_class=flight_data['cabin_class'],
+                departure_code=flight_data['departure_code'],
+                departure_city=flight_data['departure_city'],
+                arrival_code=flight_data['arrival_code'],
+                arrival_city=flight_data['arrival_city'],
+                flight_date=flight_data['flight_date'],
+                departure_time=flight_data['departure_time'],
+                arrival_time=flight_data['arrival_time'],
+                notes=flight_data['notes'],
+                is_seed=True
+            )
+            
+            # Calculate duration
+            flight.duration = calculate_flight_duration(flight.departure_time, flight.arrival_time)
+            
+            db.session.add(flight)
+            created_flights.append(flight)
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': f'Added {len(created_flights)} sample flights',
+            'flights': [f.to_dict() for f in created_flights]
+        }), 201
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to add sample data: {str(e)}'}), 500
+
+@app.route('/api/seed/remove', methods=['DELETE'])
+@login_required
+def remove_seed_data():
+    """Remove all seed data for the current user"""
+    try:
+        # Find and delete all seed flights for the current user
+        seed_flights = Flight.query.filter_by(user_id=current_user.id, is_seed=True).all()
+        
+        if not seed_flights:
+            return jsonify({'error': 'No sample data found to remove'}), 404
+        
+        count = len(seed_flights)
+        for flight in seed_flights:
+            db.session.delete(flight)
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': f'Removed {count} sample flights'
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Failed to remove sample data: {str(e)}'}), 500
 
 if __name__ == '__main__':
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'

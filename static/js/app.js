@@ -64,16 +64,42 @@ function displayFlights(flights) {
                 </div>
                 <h2 class="text-xl font-semibold text-persian_indigo-400 mb-2">No flights yet!</h2>
                 <p class="text-anti_flash_white-300 mb-4">Start tracking your flights by adding your first one.</p>
-                <a href="/add-flight" class="inline-block bg-cornflower_blue-500 hover:bg-cornflower_blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                    Add Your First Flight
-                </a>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <a href="/add-flight" class="inline-block bg-cornflower_blue-500 hover:bg-cornflower_blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                        Add Your First Flight
+                    </a>
+                    <button onclick="addSampleData()" class="inline-block bg-periwinkle-500 hover:bg-periwinkle-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                        Try with Sample Data
+                    </button>
+                </div>
+                <p class="text-xs text-anti_flash_white-200 mt-4">Sample data lets you explore the app before adding your own flights</p>
             </div>
         `;
         return;
     }
     
+    // Check if there are any seed flights
+    const hasSeedData = flights.some(flight => flight.is_seed);
+    
+    let headerHtml = '';
+    if (hasSeedData) {
+        headerHtml = `
+            <div class="bg-periwinkle-100 border border-periwinkle-300 rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-periwinkle-700">Sample data is active</p>
+                        <p class="text-xs text-periwinkle-600">These flights are for demonstration. Add your own flights or remove sample data when ready.</p>
+                    </div>
+                    <button onclick="removeSampleData()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        Remove Sample Data
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
     const flightCards = flights.map(flight => createFlightCard(flight)).join('');
-    flightsContainer.innerHTML = flightCards;
+    flightsContainer.innerHTML = headerHtml + flightCards;
     
     // Add delete functionality
     document.querySelectorAll('.delete-flight').forEach(button => {
@@ -98,7 +124,8 @@ function createFlightCard(flight) {
     }) : 'Date not set';
     
     return `
-        <div class="bg-anti_flash_white-500 rounded-xl p-4 shadow-sm">
+        <div class="bg-anti_flash_white-500 rounded-xl p-4 shadow-sm ${flight.is_seed ? 'border-2 border-periwinkle-300' : ''}">
+            ${flight.is_seed ? '<div class="inline-block bg-periwinkle-100 text-periwinkle-700 text-xs px-2 py-1 rounded-md mb-2">Sample Flight</div>' : ''}
             <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
                     <div class="flex items-center gap-2 mb-1">
@@ -399,4 +426,58 @@ function showMessage(message, type = 'info') {
             messageEl.remove();
         }
     }, 3000);
+}
+
+// Add sample data
+async function addSampleData() {
+    try {
+        const response = await fetch('/api/seed/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showMessage('Sample flights added successfully! Explore the app and remove them when ready.', 'success');
+            // Reload the flights list
+            initFlightsList();
+        } else {
+            showMessage(data.error || 'Failed to add sample data', 'error');
+        }
+    } catch (error) {
+        console.error('Error adding sample data:', error);
+        showMessage('Failed to add sample data', 'error');
+    }
+}
+
+// Remove sample data
+async function removeSampleData() {
+    if (!confirm('Are you sure you want to remove all sample flights? This will not affect your personal flights.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/seed/remove', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showMessage('Sample flights removed successfully!', 'success');
+            // Reload the flights list
+            initFlightsList();
+        } else {
+            showMessage(data.error || 'Failed to remove sample data', 'error');
+        }
+    } catch (error) {
+        console.error('Error removing sample data:', error);
+        showMessage('Failed to remove sample data', 'error');
+    }
 }
