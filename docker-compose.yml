@@ -1,0 +1,43 @@
+services:
+  app:
+    build: .
+    image: soarrr
+    container_name: soarrr
+    restart: unless-stopped
+    expose:
+      - "5001"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:?SECRET_KEY is required — set it in .env or your shell}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-soarrr}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@db:5432/${POSTGRES_DB:-soarrr}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - web
+      - internal
+
+  db:
+    image: postgres:16-alpine
+    container_name: soarrr-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-soarrr}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      - POSTGRES_DB=${POSTGRES_DB:-soarrr}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-soarrr} -d ${POSTGRES_DB:-soarrr}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - internal
+
+networks:
+  web:
+    external: true
+  internal:
+
+volumes:
+  db_data:
